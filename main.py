@@ -18,20 +18,20 @@ def verify_password(input_password, stored_password):
 
 def connect_db():
     conn = psycopg2.connect(
-            host="localhost",
+            host="pg-backend",
             database="flask_db",
             user='postgres',
-            password='Atid8431'
+            password='Arash1234'
     )
     return conn
 
 
 def create_database():
     conn = psycopg2.connect(
-            host="localhost",
+            host="pg-backend",
             database="postgres",
             user='postgres',
-            password='Atid8431'
+            password='Arash1234'
     )
     conn.autocommit = True
     cursor = conn.cursor()

@@ -1,0 +1,36 @@
+version: '3'
+services:
+
+  pg-backend:
+    image: postgres:15.2
+    restart: always
+    container_name: flask-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Arash1234
+      POSTGRES_DB: flask_db
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d flask_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  flask-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      pg-backend:
+        condition: service_healthy
+
+
+
+
+volumes:
+  postgres_data:
