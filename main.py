@@ -3,8 +3,12 @@ import psycopg2
 import hashlib
 from psycopg2 import sql
 import sys
+from flask_cors import CORS
+
+
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 def hash_password(password):
