@@ -143,12 +143,16 @@ def login():
 @app.route('/create_post', methods=["POST"])
 def create_post():
     if request.method == "POST":
-        user_id = request.json['user_id']
+        username = request.json['username']
         post_name = request.json['post_name']
         content = request.json['content']
 
+
         conn = connect_db()
         cur = conn.cursor()
+
+        cur.execute('SELECT id FROM users WHERE username = %s', (username,))
+        user_id = cur.fetchone()[0]
 
         cur.execute('INSERT INTO posts (user_id, post_name, content) '
                     'VALUES (%s, %s, %s)',
@@ -172,7 +176,8 @@ def get_posts():
 
         posts = []
         for row in rows:
-            posts.append({"id": row[0], "user_id": row[1], "name": row[2], "content": row[3]})
+            cur.execute('SELECT username FROM users WHERE id = %s', (row[1],))
+            posts.append({"id": row[0], "user_id": row[1], "name": row[2], "content": row[3], "username": cur.fetchone()[0]})
 
         cur.close()
         conn.close()
@@ -211,7 +216,6 @@ def get_count_users():
         cur.execute('SELECT COUNT(*) FROM users')
         rows = cur.fetchall()
 
-        # app.logger.debug(rows)
         users = 0
         for row in rows:
             users = row[0]
